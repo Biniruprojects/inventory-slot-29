@@ -1,46 +1,28 @@
 {
   "name": "Inventory Slot 29",
   "short_name": "IS 29",
-  "description": "An OSRS-inspired idle RPG \u2014 train skills, fight monsters, complete quests.",
-  "start_url": "./index.html",
+  "description": "An OSRS-inspired idle RPG — train skills, fight monsters, complete quests.",
+  "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0a1a0a",
   "theme_color": "#0a1a0a",
-  "icons": [
-    {
-      "src": "assets/icon-192.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "assets/icon-512.svg",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
-  ],
-  "categories": [
-    "games"
-  ],
   "lang": "en",
   "dir": "ltr",
-  "scope": "./",
-  "screenshots": [
+  "scope": "/",
+  "categories": ["games"],
+  "icons": [
     {
-      "src": "assets/screenshot-bank.png",
-      "sizes": "390x844",
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
       "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Bank & Skills view"
+      "purpose": "any"
     },
     {
-      "src": "assets/screenshot-adventure.png",
-      "sizes": "390x844",
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
       "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Adventure in progress"
+      "purpose": "maskable"
     }
   ]
 }
