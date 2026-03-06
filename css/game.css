@@ -1,0 +1,2879 @@
+/* ═══════════════════════════════════════════════════════════
+   Inventory Slot 29 — Biniru Green & Gold Theme
+   Pixel-art aesthetic. Mobile-first (320-480px).
+   Matches the Biniru Projects visual identity.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── Global: hidden attribute must always win over display ── */
+[hidden] { display: none !important; }
+
+/* ─── Local Font ──────────────────────────────────────── */
+
+@font-face {
+  font-family: "Press Start 2P";
+  src: url("fonts/PressStart2P.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* ── Biniru Green & Gold palette ── */
+  --bg-dark: #0a1a0a;
+  --bg-panel: #122212;
+  --bg-slot: #0e1e0e;
+  --bg-slot-hover: #1a3a1a;
+  --bg-slot-filled: #162a16;
+  --border: #2a4a2a;
+  --border-light: #3a5a3a;
+  --gold: #f5c842;
+  --gold-dim: #a08420;
+  --gold-bright: #ffd700;
+  --text: #c8d8c8;
+  --text-dim: #5a7a5a;
+  --text-bright: #e0f0e0;
+  --red: #a03030;
+  --red-bright: #e04040;
+  --green: #30a030;
+  --green-bright: #50d050;
+  --xp-bar: #2e7d32;
+  --xp-bar-bg: #0e1e0e;
+  --btn-primary: #1a2e1a;
+  --btn-primary-hover: #244024;
+  --btn-active: #f5c842;
+  --btn-active-text: #0a1a0a;
+  --glow: rgba(100, 180, 100, 0.15);
+  --scene-top: #060e06;
+  --scene-mid: #0e1e0e;
+  --scene-bottom: #1a2e1a;
+
+  /* ── Responsive font scale ── */
+  --fs-tiny:   5px;   /* bank qty, tooltips */
+  --fs-xs:     6px;   /* secondary labels */
+  --fs-sm:     7px;   /* descriptions, hints */
+  --fs-md:     8px;   /* buttons, inputs */
+  --fs-base:   9px;   /* standard UI text */
+  --fs-lg:    10px;   /* headers, skill names */
+  --fs-xl:    11px;   /* title, gold display */
+  --fs-tab:    7px;   /* tab bar labels */
+}
+
+/* ─── Reset & Base ─────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Press Start 2P", monospace;
+  font-size: 10px;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg-dark);
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding-bottom: 68px;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  image-rendering: pixelated;
+  overscroll-behavior: none;
+  touch-action: pan-y;
+}
+
+/* ─── Hide Native Scrollbars ─────────────────────────── */
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+#skill-selector::-webkit-scrollbar,
+.log-entries::-webkit-scrollbar,
+.lore-entries::-webkit-scrollbar {
+  display: none;
+}
+
+html, body,
+#skill-selector,
+.log-entries,
+.lore-entries {
+  scrollbar-width: none;
+}
+
+/* ─── Header ───────────────────────────────────────────── */
+
+#header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--bg-panel);
+  border-bottom: 2px solid var(--border);
+  box-shadow: 0 2px 12px var(--glow);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-title {
+  font-size: 11px;
+  color: var(--gold);
+  text-shadow: 0 0 6px rgba(245, 200, 66, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.header-logo {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
+}
+
+.header-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-combat {
+  font-size: 9px;
+  color: var(--text);
+}
+
+.header-gp {
+  font-size: 10px;
+  color: var(--gold-bright);
+  text-shadow: 0 0 4px rgba(255, 215, 0, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.gp-icon {
+  width: 14px;
+  height: 14px;
+  image-rendering: pixelated;
+}
+
+/* ─── Tab Bar (fixed bottom) ──────────────────────────── */
+
+#tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  background: var(--bg-panel);
+  border-top: 2px solid var(--border);
+  box-shadow: 0 -2px 12px var(--glow);
+  z-index: 100;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.tab-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 4px 10px;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-family: "Press Start 2P", monospace;
+  font-size: 7px;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.tab-btn:hover {
+  color: var(--text);
+}
+
+.tab-btn.active {
+  color: var(--gold);
+  background: rgba(245, 200, 66, 0.05);
+}
+
+.tab-icon {
+  width: 20px;
+  height: 20px;
+  image-rendering: pixelated;
+  opacity: 0.5;
+  transition: opacity 0.15s;
+}
+
+.tab-btn.active .tab-icon {
+  opacity: 1;
+}
+
+/* ─── Tab Panels ──────────────────────────────────────── */
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+/* ─── Shared ──────────────────────────────────────────── */
+
+.section-title {
+  font-size: 10px;
+  color: var(--text-bright);
+  padding: 14px 16px 10px;
+}
+
+/* ─── Scene (Bankstanding) ─────────────────────────────── */
+
+#scene {
+  position: relative;
+  height: 160px;
+  background: linear-gradient(180deg, var(--scene-top) 0%, var(--scene-mid) 60%, var(--scene-bottom) 100%);
+  border-bottom: 2px solid var(--border);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Subtle floor tiles */
+#scene::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(42, 74, 42, 0.3) 0px,
+      rgba(42, 74, 42, 0.3) 24px,
+      rgba(30, 54, 30, 0.3) 24px,
+      rgba(30, 54, 30, 0.3) 48px
+    );
+}
+
+.bank-counter {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 180px;
+  height: 40px;
+  background: linear-gradient(180deg, #5a4a2a, #3a2a1a);
+  border: 2px solid #6a5a3a;
+  border-radius: 2px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Bank counter top edge shine */
+.bank-counter::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 2px;
+  right: 2px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(218, 165, 32, 0.3), transparent);
+}
+
+.character {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 36px;
+  animation: idle-bob 2s ease-in-out infinite;
+}
+
+.char-head {
+  width: 16px;
+  height: 16px;
+  background: #d4a574;
+  border: 2px solid #8a6a44;
+}
+
+.char-body {
+  width: 20px;
+  height: 18px;
+  background: #2a5a2a;
+  border: 2px solid #1a3a1a;
+  margin-top: -2px;
+}
+
+/* Equipment tier colors on body */
+.char-body.eq-copper   { background: #8b5e3c; border-color: #6b3e1c; }
+.char-body.eq-tin      { background: #6a7a6a; border-color: #4a5a4a; }
+.char-body.eq-iron     { background: #4a5060; border-color: #2a3040; }
+.char-body.eq-steel    { background: #5a6070; border-color: #3a4050; }
+.char-body.eq-mithril  { background: #3a4a80; border-color: #1a2a60; }
+.char-body.eq-magic    { background: #4a2a70; border-color: #2a0a50; }
+.char-body.eq-leather  { background: #6a4a2a; border-color: #4a2a0a; }
+.char-body { position: relative; }
+
+/* Weapon indicator: tiny sword/bow pixel on char body */
+.char-weapon {
+  position: absolute;
+  right: -10px;
+  bottom: 18px;
+  width: 6px;
+  height: 12px;
+  background: #c8aa6e;
+  border: 1px solid #8a7a4a;
+  border-radius: 1px;
+}
+.char-weapon.eq-bow {
+  width: 4px;
+  height: 14px;
+  background: #8a6a3a;
+  border-radius: 2px;
+}
+.char-weapon.eq-staff {
+  width: 4px;
+  height: 16px;
+  background: #6a3a8a;
+  border-color: #4a1a6a;
+  border-radius: 1px;
+}
+
+/* Shield indicator: tiny square on left */
+.char-shield {
+  position: absolute;
+  left: -9px;
+  bottom: 20px;
+  width: 7px;
+  height: 8px;
+  background: #5a7a5a;
+  border: 1px solid #3a5a3a;
+}
+.char-shield.eq-copper  { background: #8b5e3c; border-color: #6b3e1c; }
+.char-shield.eq-tin     { background: #6a7a6a; border-color: #4a5a4a; }
+.char-shield.eq-iron    { background: #4a5060; border-color: #2a3040; }
+.char-shield.eq-steel   { background: #5a6070; border-color: #3a4050; }
+.char-shield.eq-mithril { background: #3a4a80; border-color: #1a2a60; }
+
+.char-legs {
+  width: 16px;
+  height: 12px;
+  background: #5a3a2a;
+  border: 2px solid #3a2a1a;
+  margin-top: -2px;
+}
+
+.bank-label {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 7px;
+  color: var(--text-dim);
+  white-space: nowrap;
+  z-index: 5;
+}
+
+@keyframes idle-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* Smelting animation — applied via JS */
+.character.smelting {
+  animation: smelt-glow 0.6s ease-in-out;
+}
+
+@keyframes smelt-glow {
+  0% { filter: brightness(1) drop-shadow(0 0 0 transparent); }
+  30% { filter: brightness(1.6) drop-shadow(0 0 8px rgba(245, 200, 66, 0.6)); }
+  100% { filter: brightness(1) drop-shadow(0 0 0 transparent); }
+}
+
+/* ─── Skill Panel ──────────────────────────────────────── */
+
+#skill-panel {
+  padding: 14px 16px;
+  background: var(--bg-panel);
+  border-bottom: 2px solid var(--border);
+}
+
+.skill-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.skill-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.skill-icon img {
+  width: 20px;
+  height: 20px;
+}
+
+.skill-name {
+  font-size: 11px;
+  color: var(--text-bright);
+  flex: 1;
+}
+
+.skill-level {
+  font-size: 10px;
+  color: var(--gold);
+  text-shadow: 0 0 4px rgba(245, 200, 66, 0.3);
+}
+
+/* XP Bar */
+
+.xp-bar-container {
+  position: relative;
+  height: 18px;
+  background: var(--xp-bar-bg);
+  border: 2px solid var(--border);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.xp-bar {
+  height: 100%;
+  background: linear-gradient(180deg, #3a9a3a, var(--xp-bar));
+  width: 0%;
+  transition: width 0.4s ease;
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.xp-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 7px;
+  color: var(--text-bright);
+  white-space: nowrap;
+  text-shadow: 1px 1px 0 #000, -1px -1px 0 #000;
+}
+
+/* Recipe */
+
+.recipe-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.recipe-label {
+  font-size: 8px;
+  color: var(--text-dim);
+}
+
+#recipe-select,
+#combat-style-select {
+  flex: 1;
+  font-family: "Press Start 2P", monospace;
+  font-size: 8px;
+  padding: 6px 8px;
+  background: var(--bg-slot);
+  color: var(--text);
+  border: 2px solid var(--border);
+  cursor: pointer;
+  outline: none;
+}
+
+#recipe-select:focus,
+#combat-style-select:focus {
+  border-color: var(--gold-dim);
+  box-shadow: 0 0 4px rgba(245, 200, 66, 0.2);
+}
+
+.recipe-preview {
+  font-size: 8px;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+  min-height: 28px;
+  line-height: 2;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.recipe-preview img {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+}
+
+.recipe-xp {
+  color: var(--green-bright);
+}
+
+/* Action Buttons */
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-smelt,
+.btn-auto {
+  flex: 1;
+  font-family: "Press Start 2P", monospace;
+  font-size: 9px;
+  padding: 10px 8px;
+  border: 2px solid var(--border);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.btn-smelt {
+  background: var(--btn-primary);
+  color: var(--gold);
+  border-color: var(--gold-dim);
+}
+
+.btn-smelt:hover {
+  background: var(--btn-primary-hover);
+  border-color: var(--gold);
+  box-shadow: 0 0 8px rgba(245, 200, 66, 0.2);
+}
+
+.btn-smelt:active {
+  background: var(--gold);
+  color: var(--btn-active-text);
+}
+
+.btn-smelt:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-auto {
+  background: var(--btn-primary);
+  color: var(--text-dim);
+  border-color: var(--border);
+}
+
+.btn-auto:hover {
+  background: var(--btn-primary-hover);
+}
+
+.btn-auto.active {
+  background: var(--gold);
+  color: var(--btn-active-text);
+  border-color: var(--gold-bright);
+  box-shadow: 0 0 10px rgba(245, 200, 66, 0.3);
+}
+
+/* ─── Gather Progress Bar ─────────────────────────────── */
+
+.gather-progress-wrap {
+  margin-top: 8px;
+  height: 6px;
+  background: var(--xp-bar-bg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.gather-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--green), var(--green-bright));
+  transition: none;
+  box-shadow: 0 0 4px rgba(80, 208, 80, 0.4);
+}
+
+/* ─── Inventory ────────────────────────────────────────── */
+
+#inventory-panel {
+  padding: 14px 16px;
+  background: var(--bg-panel);
+  border-bottom: 2px solid var(--border);
+}
+
+.inventory-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  color: var(--text-bright);
+  margin-bottom: 10px;
+}
+
+.inventory-count {
+  font-size: 8px;
+  color: var(--text-dim);
+}
+
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+
+.inv-slot {
+  aspect-ratio: 1;
+  background: var(--bg-slot);
+  border: 2px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  position: relative;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.inv-slot.filled {
+  background: var(--bg-slot-filled);
+}
+
+.inv-slot.filled:hover {
+  border-color: var(--border-light);
+  box-shadow: inset 0 0 8px var(--glow);
+}
+
+.inv-slot-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inv-slot-icon img {
+  width: 28px;
+  height: 28px;
+  image-rendering: pixelated;
+}
+
+.inv-slot-qty {
+  font-size: 7px;
+  color: var(--gold-bright);
+  margin-top: 2px;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.inv-slot-name {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 6px;
+  color: var(--text-bright);
+  background: var(--bg-dark);
+  border: 1px solid var(--border-light);
+  padding: 3px 6px;
+  white-space: nowrap;
+  z-index: 50;
+  pointer-events: none;
+  display: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.inv-slot:hover .inv-slot-name {
+  display: block;
+}
+
+/* ─── Bank Storage Panel ─────────────────────────────── */
+
+#bank-storage-panel {
+  padding: 14px 16px;
+  background: var(--bg-panel);
+  border-bottom: 2px solid var(--border);
+}
+
+.bank-storage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  color: var(--text-bright);
+  margin-bottom: 10px;
+}
+
+.bank-count {
+  font-size: 8px;
+  color: var(--text-dim);
+}
+
+/* ─── Bank Tab Bar ───────────────────────────────────────── */
+
+.bank-tab-bar {
+  display: flex;
+  gap: 3px;
+  padding: 0 0 8px 0;
+  margin-bottom: 4px;
+}
+
+.bank-tab-btn {
+  flex: 1;
+  font-family: "Press Start 2P", monospace;
+  font-size: 8px;
+  padding: 6px 2px;
+  background: var(--bg-slot);
+  color: var(--text-dim);
+  border: 2px solid var(--border);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.bank-tab-btn:hover {
+  border-color: var(--border-light);
+  color: var(--text);
+}
+
+.bank-tab-btn.active {
+  background: var(--bg-slot-filled);
+  color: var(--gold);
+  border-color: var(--gold-dim);
+}
+
+.bank-tab-icon {
+  width: 14px;
+  height: 14px;
+  image-rendering: pixelated;
+  display: block;
+}
+
+.btn-deposit-all {
+  width: 100%;
+  font-family: "Press Start 2P", monospace;
+  font-size: 8px;
+  padding: 8px;
+  margin-bottom: 10px;
+  background: var(--btn-primary);
+  color: var(--gold);
+  border: 2px solid var(--gold-dim);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.btn-deposit-all:hover {
+  background: var(--btn-primary-hover);
+  border-color: var(--gold);
+  box-shadow: 0 0 8px rgba(245, 200, 66, 0.2);
+}
+
+.btn-deposit-all:active {
+  background: var(--gold);
+  color: var(--btn-active-text);
+}
+
+.bank-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 3px;
+}
+
+.bank-slot {
+  aspect-ratio: 1;
+  background: var(--bg-slot);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  position: relative;
+  transition: border-color 0.15s;
+  overflow: visible;
+}
+
+.bank-slot.filled {
+  background: var(--bg-slot-filled);
+  cursor: pointer;
+}
+
+.bank-slot.filled:hover {
+  border-color: var(--border-light);
+  box-shadow: inset 0 0 6px var(--glow);
+}
+
+.bank-slot-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bank-slot-icon img {
+  width: 20px;
+  height: 20px;
+  image-rendering: pixelated;
+}
+
+.bank-slot-qty {
+  font-size: 6px;
+  color: var(--gold-bright);
+  text-shadow: 1px 1px 0 #000;
+}
+
+.bank-slot-name {
+  position: absolute;
+  bottom: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 5px;
+  color: var(--text-bright);
+  background: var(--bg-dark);
+  border: 1px solid var(--border-light);
+  padding: 2px 4px;
+  white-space: nowrap;
+  z-index: 50;
+  pointer-events: none;
+  display: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.bank-slot:hover .bank-slot-name {
+  display: block;
+}
+
+/* ─── Adventures Tab ──────────────────────────────────── */
+
+/* Combat style selector */
+.adv-style-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px 12px;
+}
+
+/* Location list */
+.adv-locations {
+  padding-bottom: 16px;
+}
+
+#location-list {
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.adv-loc-card {
+  background: var(--bg-panel);
+  border: 2px solid var(--border);
+  padding: 12px;
+  transition: border-color 0.15s;
+}
+
+.adv-loc-card:hover:not(.locked) {
+  border-color: var(--border-light);
+}
+
+.adv-loc-card.locked {
+  opacity: 0.5;
+}
+
+.adv-loc-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.adv-loc-icon {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
+
+.adv-loc-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.adv-loc-name {
+  font-size: 9px;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+
+.adv-loc-desc {
+  font-size: 7px;
+  color: var(--text-dim);
+  line-height: 1.8;
+  margin-bottom: 4px;
+}
+
+.adv-loc-req {
+  font-size: 7px;
+  color: var(--text-dim);
+}
+
+.adv-loc-locked {
+  font-size: 8px;
+  color: var(--red);
+  text-align: center;
+  padding: 6px;
+}
+
+.adv-duration-btns {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-duration {
+  flex: 1;
+  font-family: "Press Start 2P", monospace;
+  font-size: 8px;
+  padding: 8px 4px;
+  background: var(--btn-primary);
+  color: var(--gold);
+  border: 2px solid var(--gold-dim);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.btn-duration:hover {
+  background: var(--btn-primary-hover);
+  border-color: var(--gold);
+  box-shadow: 0 0 6px rgba(245, 200, 66, 0.2);
+}
+
+.btn-duration:active {
+  background: var(--gold);
+  color: var(--btn-active-text);
+}
+
+/* Active adventure panel */
+.adv-active-panel {
+  padding: 16px;
+}
+
+.adv-active-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.adv-active-name {
+  font-size: 10px;
+  color: var(--gold);
+  margin-bottom: 2px;
+}
+
+.adv-active-style {
+  font-size: 7px;
+  color: var(--text-dim);
+}
+
+/* Adventure timer bar */
+.adv-timer-bar-container {
+  position: relative;
+  height: 22px;
+  background: var(--xp-bar-bg);
+  border: 2px solid var(--border);
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.adv-timer-bar {
+  height: 100%;
+  background: linear-gradient(180deg, var(--gold), var(--gold-dim));
+  width: 0%;
+  transition: width 1s linear;
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.adv-timer-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 8px;
+  color: var(--text-bright);
+  white-space: nowrap;
+  text-shadow: 1px 1px 0 #000, -1px -1px 0 #000;
+}
+
+/* Collect button */
+.btn-collect {
+  width: 100%;
+  font-family: "Press Start 2P", monospace;
+  font-size: 10px;
+  padding: 12px;
+  background: var(--gold);
+  color: var(--btn-active-text);
+  border: 2px solid var(--gold-bright);
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(245, 200, 66, 0.4);
+  animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+.btn-collect:hover {
+  background: var(--gold-bright);
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(245, 200, 66, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(245, 200, 66, 0.6); }
+}
+
+/* Adventure result panel */
+.adv-result-panel {
+  padding: 16px;
+}
+
+.adv-result-title {
+  font-size: 11px;
+  color: var(--gold);
+  text-align: center;
+  margin-bottom: 14px;
+  text-shadow: 0 0 6px rgba(245, 200, 66, 0.3);
+}
+
+.adv-result-body {
+  margin-bottom: 14px;
+}
+
+.adv-result-stat {
+  font-size: 8px;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+/* ─── Boss Encounter Notification ──────────────────────── */
+
+.boss-encounter-notification {
+  border: 2px solid var(--red-bright);
+  background: rgba(160, 48, 48, 0.15);
+  padding: 10px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.boss-encounter-notification.boss-won {
+  border-color: var(--gold);
+  background: rgba(245, 200, 66, 0.1);
+}
+
+.boss-encounter-label {
+  font-family: "Press Start 2P", monospace;
+  font-size: 8px;
+  color: var(--red-bright);
+  margin-bottom: 4px;
+  letter-spacing: 1px;
+}
+
+.boss-encounter-notification.boss-won .boss-encounter-label {
+  color: var(--gold);
+}
+
+.boss-encounter-name {
+  font-family: "Press Start 2P", monospace;
+  font-size: 10px;
+  color: var(--text-bright);
+  margin-bottom: 4px;
+}
+
+.boss-encounter-result {
+  font-size: 8px;
+  color: var(--green-bright);
+}
+
+.boss-encounter-notification.boss-fled .boss-encounter-result {
+  color: var(--text-dim);
+}
+
+.adv-result-xp {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.adv-xp-entry {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 8px;
+  color: var(--green-bright);
+}
+
+.adv-xp-icon {
+  width: 14px;
+  height: 14px;
+  image-rendering: pixelated;
+}
+
+.adv-result-loot {
+  background: var(--bg-slot);
+  border: 2px solid var(--border);
+  padding: 10px;
+}
+
+.adv-result-loot-title {
+  font-size: 8px;
+  color: var(--text-bright);
+  margin-bottom: 6px;
+}
+
+.adv-loot-entry {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 8px;
+  color: var(--text);
+  padding: 3px 0;
+}
+
+.adv-loot-icon {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
+}
+
+.btn-dismiss {
+  width: 100%;
+  font-family: "Press Start 2P", monospace;
+  font-size: 9px;
+  padding: 10px;
+  background: var(--btn-primary);
+  color: var(--gold);
+  border: 2px solid var(--gold-dim);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.btn-dismiss:hover {
+  background: var(--btn-primary-hover);
+  border-color: var(--gold);
+}
+
+/* ─── Quests Tab ──────────────────────────────────────── */
+
+#quest-list,
+#quest-completed-list {
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#quest-list {
+  padding-bottom: 10px;
+}
+
+.quest-empty {
+  font-size: 8px;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 24px 16px;
+  line-height: 2;
+}
+
+.quest-card {
+  background: var(--bg-panel);
+  border: 2px solid var(--border);
+  padding: 12px;
+}
+
+.quest-card.completed {
+  opacity: 0.5;
+}
+
+.quest-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.quest-icon {
+  width: 24px;
+  height: 24px;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
+
+.quest-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.quest-name {
+  font-size: 9px;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+
+.quest-desc {
+  font-size: 7px;
+  color: var(--text-dim);
+  line-height: 1.8;
+}
+
+.quest-done {
+  color: var(--green-bright);
+}
+
+/* Quest objectives */
+.quest-objectives {
+  margin-bottom: 8px;
+}
+
+.quest-objective {
+  margin-bottom: 6px;
+}
+
+.quest-obj-label {
+  font-size: 7px;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+
+.quest-progress-bar-container {
+  position: relative;
+  height: 14px;
+  background: var(--xp-bar-bg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.quest-progress-bar {
+  height: 100%;
+  background: linear-gradient(180deg, #3a9a3a, var(--xp-bar));
+  transition: width 0.3s ease;
+}
+
+.quest-progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 6px;
+  color: var(--text-bright);
+  white-space: nowrap;
+  text-shadow: 1px 1px 0 #000;
+}
+
+/* Quest rewards */
+.quest-rewards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 7px;
+}
+
+.quest-reward-gp {
+  color: var(--gold-bright);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.quest-reward-xp {
+  color: var(--green-bright);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.quest-reward-icon {
+  width: 12px;
+  height: 12px;
+  image-rendering: pixelated;
+}
+
+.btn-claim {
+  width: 100%;
+  font-family: "Press Start 2P", monospace;
+  font-size: 8px;
+  padding: 8px;
+  background: var(--gold);
+  color: var(--btn-active-text);
+  border: 2px solid var(--gold-bright);
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(245, 200, 66, 0.3);
+  transition: background 0.15s;
+}
+
+.btn-claim:hover {
+  background: var(--gold-bright);
+}
+
+.completed-title {
+  border-top: 2px solid var(--border);
+  margin-top: 6px;
+  padding-top: 14px;
+}
+
+/* ─── Skills Tab ──────────────────────────────────────── */
+
+#skills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 0 8px 8px;
+}
+
+.skill-tile {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--bg-panel);
+  border: 2px solid var(--border);
+  padding: 6px;
+}
+
+.skill-tile.locked {
+  opacity: 0.4;
+}
+
+.skill-tile-icon {
+  width: 18px;
+  height: 18px;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
+
+.skill-tile-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.skill-tile-name {
+  font-size: 6px;
+  color: var(--text-bright);
+  margin-bottom: 1px;
+}
+
+.skill-tile-level {
+  font-size: 7px;
+  color: var(--gold);
+  margin-bottom: 2px;
+}
+
+.skill-tile-xp-bar {
+  height: 4px;
+  background: var(--xp-bar-bg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.skill-tile-xp-fill {
+  height: 100%;
+  background: var(--xp-bar);
+}
+
+/* Stats block */
+.stats-block {
+  margin: 0 8px 8px;
+  background: var(--bg-panel);
+  border: 2px solid var(--border);
+  padding: 6px 8px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 7px;
+  padding: 2px 0;
+  color: var(--text);
+  border-bottom: 1px solid rgba(42, 74, 42, 0.3);
+}
+
+.stat-row:last-child {
+  border-bottom: none;
+}
+
+.stat-row span:last-child {
+  color: var(--gold);
+}
+
+/* ─── Level Up Notification ────────────────────────────── */
+
+.level-up-notification {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 200;
+  pointer-events: none;
+}
+
+.level-up-notification:not([hidden]) {
+  animation: level-up-appear 2.5s ease-out forwards;
+}
+
+.level-up-text {
+  font-size: 14px;
+  color: var(--gold-bright);
+  text-shadow:
+    0 0 10px var(--gold),
+    0 0 20px var(--gold-dim),
+    0 0 40px rgba(245, 200, 66, 0.3),
+    2px 2px 0 #000;
+  white-space: nowrap;
+  text-align: center;
+}
+
+@keyframes level-up-appear {
+  0% { opacity: 0; transform: translate(-50%, -40%) scale(0.8); }
+  15% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+  30% { transform: translate(-50%, -50%) scale(1); }
+  70% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -70%) scale(1); }
+}
+
+/* ─── Footer ───────────────────────────────────────────── */
+
+#footer {
+  padding: 14px 16px;
+  text-align: center;
+}
+
+.disclaimer {
+  font-size: 6px;
+  color: #2a3a2a;
+}
+
+.footer-links {
+  margin-top: 4px;
+}
+
+.footer-link {
+  font-size: 6px;
+  color: #3a5a3a;
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  color: #50d050;
+}
+
+/* ─── Skill Selector (Bank tab skill switcher) ───────── */
+
+#skill-selector {
+  display: flex;
+  gap: 2px;
+  padding: 8px 16px 0;
+  background: var(--bg-panel);
+  border-bottom: 2px solid var(--border);
+  overflow-x: auto;
+}
+
+.sp-skill-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  background: var(--bg-slot);
+  border: 2px solid var(--border);
+  border-bottom: none;
+  color: var(--text-dim);
+  font-family: "Press Start 2P", monospace;
+  font-size: 7px;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.sp-skill-btn:hover {
+  color: var(--text);
+  background: var(--bg-slot-hover);
+}
+
+.sp-skill-btn.active {
+  color: var(--gold);
+  background: var(--bg-panel);
+  border-color: var(--gold-dim);
+  border-bottom: 2px solid var(--bg-panel);
+  margin-bottom: -2px;
+}
+
+.sp-skill-icon {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
+}
+
+/* Generic Skill Panel Body */
+
+#skill-panel-body {
+  padding: 14px 16px;
+  background: var(--bg-panel);
+  border-bottom: 2px solid var(--border);
+}
+
+#skill-panel-body .skill-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+#skill-panel-body .sp-action-select {
+  flex: 1;
+  font-family: "Press Start 2P", monospace;
+  font-size: 8px;
+  padding: 6px 8px;
+  background: var(--bg-slot);
+  color: var(--text);
+  border: 2px solid var(--border);
+  cursor: pointer;
+  outline: none;
+}
+
+#skill-panel-body .sp-action-select:focus {
+  border-color: var(--gold-dim);
+  box-shadow: 0 0 4px rgba(245, 200, 66, 0.2);
+}
+
+.sp-tick {
+  font-size: 7px;
+  color: var(--text-dim);
+}
+
+/* ─── Equipment Panel ─────────────────────────────────── */
+
+#equipment-panel {
+  padding: 14px 16px;
+  background: var(--bg-panel);
+  border-bottom: 2px solid var(--border);
+}
+
+.equipment-header {
+  font-size: 10px;
+  color: var(--text-bright);
+  margin-bottom: 10px;
+}
+
+.equipment-slots {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.eq-slot {
+  background: var(--bg-slot);
+  border: 2px solid var(--border);
+  padding: 8px;
+  text-align: center;
+  min-height: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.eq-slot:hover {
+  border-color: var(--border-light);
+}
+
+.eq-slot.filled {
+  background: var(--bg-slot-filled);
+  border-color: var(--gold-dim);
+}
+
+.eq-slot.filled:hover {
+  border-color: var(--gold);
+  box-shadow: 0 0 8px rgba(245, 200, 66, 0.15);
+}
+
+.eq-slot-label {
+  font-size: 6px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.eq-slot-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eq-item-img {
+  width: 28px;
+  height: 28px;
+  image-rendering: pixelated;
+}
+
+.eq-slot-name {
+  font-size: 6px;
+  color: var(--text-dim);
+}
+
+.eq-slot.filled .eq-slot-name {
+  color: var(--gold);
+}
+
+.equipment-bonuses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.eq-bonus {
+  font-size: 7px;
+  color: var(--green-bright);
+  padding: 2px 6px;
+  background: rgba(48, 160, 48, 0.1);
+  border: 1px solid rgba(48, 160, 48, 0.2);
+}
+
+.eq-bonus.eq-none {
+  color: var(--text-dim);
+  background: none;
+  border: none;
+}
+
+/* Equippable inventory slot indicator */
+
+.inv-slot.equippable {
+  cursor: pointer;
+}
+
+.inv-slot.equippable::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 6px;
+  height: 6px;
+  background: var(--gold-dim);
+  opacity: 0.6;
+}
+
+.inv-slot.equippable:hover::after {
+  background: var(--gold);
+  opacity: 1;
+}
+
+/* ─── Shop Tab ────────────────────────────────────────── */
+
+/* ─── Shop Switcher ──────────────────────────────────────── */
+
+.shop-switcher {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.shop-switch-btn {
+  flex: 1;
+  font-family: "Press Start 2P", monospace;
+  font-size: 6px;
+  padding: 7px 4px;
+  background: var(--bg-slot);
+  color: var(--text-dim);
+  border: 2px solid var(--border);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  text-align: center;
+}
+
+.shop-switch-btn:hover {
+  border-color: var(--border-light);
+  color: var(--text);
+}
+
+.shop-switch-btn.active {
+  background: var(--bg-slot-filled);
+  color: var(--gold);
+  border-color: var(--gold-dim);
+}
+
+.shop-gp {
+  padding: 0 16px 12px;
+  font-size: 10px;
+  color: var(--gold-bright);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.shop-gp .gp-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.shop-stock,
+.shop-inventory {
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.shop-sell-title {
+  border-top: 2px solid var(--border);
+  margin-top: 6px;
+}
+
+.shop-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-panel);
+  border: 2px solid var(--border);
+  padding: 8px 10px;
+}
+
+.shop-item.cant-afford {
+  opacity: 0.5;
+}
+
+.shop-item-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.shop-item-icon img {
+  width: 24px;
+  height: 24px;
+  image-rendering: pixelated;
+}
+
+.shop-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.shop-item-name {
+  font-size: 8px;
+  color: var(--text-bright);
+  margin-bottom: 2px;
+}
+
+.shop-item-price {
+  font-size: 7px;
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.shop-sell-price {
+  color: var(--green-bright);
+}
+
+.shop-gp-icon {
+  width: 10px;
+  height: 10px;
+  image-rendering: pixelated;
+}
+
+/* Shop bulk buy/sell button group */
+.shop-btns {
+  display: flex;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.btn-buy,
+.btn-sell {
+  font-family: "Press Start 2P", monospace;
+  font-size: 7px;
+  padding: 5px 7px;
+  background: var(--btn-primary);
+  color: var(--gold);
+  border: 2px solid var(--gold-dim);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.btn-buy:hover:not(:disabled),
+.btn-sell:hover {
+  background: var(--btn-primary-hover);
+  border-color: var(--gold);
+}
+
+.btn-buy:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-sell {
+  color: var(--green-bright);
+  border-color: var(--green);
+}
+
+.btn-sell:hover {
+  border-color: var(--green-bright);
+}
+
+.shop-empty {
+  font-size: 8px;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 16px;
+}
+
+/* ─── Quest Unlock Reward ─────────────────────────────── */
+
+.quest-reward-unlock {
+  color: #aa66ff;
+  font-size: 7px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* ─── Adventure GP Display ────────────────────────────── */
+
+.adv-gp-gained {
+  color: var(--gold-bright);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ─── Info Button (Header) ────────────────────────────── */
+
+.btn-info {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 28px;
+  font-family: "Press Start 2P", monospace;
+  font-size: 10px;
+  font-weight: bold;
+  font-style: italic;
+  line-height: 1;
+  background: var(--btn-primary);
+  color: var(--gold);
+  border: 2px solid var(--gold-dim);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+  flex-shrink: 0;
+}
+
+.btn-info:hover {
+  background: var(--btn-primary-hover);
+  border-color: var(--gold);
+  box-shadow: 0 0 8px rgba(245, 200, 66, 0.3);
+}
+
+/* ─── Active Boosts Bar ───────────────────────────────── */
+
+.active-boosts {
+  display: flex;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--bg-panel);
+  border-bottom: 2px solid var(--border);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.boost-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  font-family: "Press Start 2P", monospace;
+  font-size: 7px;
+  border-radius: 10px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.boost-pill.boost-attack {
+  color: #e04040;
+  border-color: #a03030;
+  background: rgba(160, 48, 48, 0.15);
+}
+
+.boost-pill.boost-strength {
+  color: #50d050;
+  border-color: #30a030;
+  background: rgba(48, 160, 48, 0.15);
+}
+
+.boost-pill.boost-defence {
+  color: #5090e0;
+  border-color: #305a90;
+  background: rgba(48, 90, 144, 0.15);
+}
+
+.boost-pill.boost-magic {
+  color: #b060e0;
+  border-color: #703a90;
+  background: rgba(112, 58, 144, 0.15);
+}
+
+.boost-pill.boost-ranged {
+  color: #e0a040;
+  border-color: #906020;
+  background: rgba(144, 96, 32, 0.15);
+}
+
+/* ─── Adventure Log ───────────────────────────────────── */
+
+.adventure-log {
+  padding: 0 16px 16px;
+}
+
+.log-entries {
+  background: var(--bg-panel);
+  border: 2px solid var(--border);
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.log-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  font-size: 7px;
+  color: var(--text);
+  border-bottom: 1px solid rgba(42, 74, 42, 0.3);
+  gap: 6px;
+}
+
+.log-entry:last-child {
+  border-bottom: none;
+}
+
+.log-entry-location {
+  color: var(--gold);
+  flex-shrink: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.log-entry-stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.log-entry-kills {
+  color: var(--red-bright);
+}
+
+.log-entry-gp {
+  color: var(--gold-bright);
+}
+
+.log-entry-time {
+  color: var(--text-dim);
+  min-width: 40px;
+  text-align: right;
+}
+
+.log-empty {
+  font-size: 7px;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 16px;
+}
+
+/* ─── Bank Withdraw Quantity Buttons ──────────────────── */
+
+.bank-qty-btns {
+  display: flex;
+  gap: 2px;
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.bank-slot.filled:hover .bank-qty-btns,
+.bank-slot.filled:focus-within .bank-qty-btns {
+  opacity: 1;
+}
+
+.bank-qty-btn {
+  font-family: "Press Start 2P", monospace;
+  font-size: 5px;
+  padding: 2px 3px;
+  min-width: 16px;
+  min-height: 16px;
+  background: var(--btn-primary);
+  color: var(--gold);
+  border: 1px solid var(--gold-dim);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  line-height: 1;
+  text-align: center;
+}
+
+.bank-qty-btn:hover {
+  background: var(--btn-primary-hover);
+  border-color: var(--gold);
+}
+
+.bank-qty-btn:active {
+  background: var(--gold);
+  color: var(--btn-active-text);
+}
+
+/* Deposit button on inventory items while bank is visible */
+.inv-slot-deposit {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Press Start 2P", monospace;
+  font-size: 5px;
+  padding: 2px 4px;
+  min-height: 16px;
+  background: var(--btn-primary);
+  color: var(--green-bright);
+  border: 1px solid var(--green);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.inv-slot-deposit:hover {
+  background: var(--btn-primary-hover);
+  border-color: var(--green-bright);
+}
+
+.inv-slot-deposit:active {
+  background: var(--green);
+  color: var(--bg-dark);
+}
+
+/* ─── Item Tooltip ────────────────────────────────────── */
+
+.item-tooltip {
+  position: fixed;
+  z-index: 300;
+  max-width: 200px;
+  padding: 10px 12px;
+  background: var(--bg-dark);
+  border: 2px solid var(--gold-dim);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7), 0 0 8px rgba(245, 200, 66, 0.15);
+  font-family: "Press Start 2P", monospace;
+  font-size: 7px;
+  color: var(--text);
+  line-height: 1.8;
+  pointer-events: none;
+}
+
+.tooltip-name {
+  font-size: 8px;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+
+.tooltip-category {
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+
+.tooltip-stat {
+  color: var(--green-bright);
+}
+
+.tooltip-heal {
+  color: var(--green-bright);
+}
+
+.tooltip-price {
+  color: var(--gold-bright);
+  margin-top: 4px;
+}
+
+/* ─── Pets Panel ──────────────────────────────────────── */
+
+.pets-panel {
+  padding: 0 16px 14px;
+  background: var(--bg-panel);
+  border-bottom: 2px solid var(--border);
+}
+
+.pets-panel .section-title {
+  padding: 14px 0 10px;
+}
+
+.pet-count {
+  font-size: 8px;
+  color: var(--text-dim);
+}
+
+.pet-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 48px);
+  gap: 6px;
+  justify-content: start;
+}
+
+.pet-slot {
+  width: 48px;
+  height: 48px;
+  background: var(--bg-slot);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  position: relative;
+}
+
+.pet-slot:hover {
+  border-color: var(--border-light);
+}
+
+.pet-slot.owned {
+  background: var(--bg-slot-filled);
+}
+
+.pet-slot.active {
+  border-color: var(--gold);
+  box-shadow: 0 0 10px rgba(245, 200, 66, 0.4);
+  animation: pet-pulse 2s ease-in-out infinite;
+}
+
+.pet-slot.unowned {
+  opacity: 0.4;
+}
+
+.pet-slot-icon {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+}
+
+.pet-slot.unowned .pet-slot-icon {
+  filter: brightness(0) saturate(100%);
+}
+
+.pet-slot-unknown {
+  font-size: 16px;
+  color: var(--text-dim);
+  font-family: "Press Start 2P", monospace;
+}
+
+.pet-slot-name {
+  position: absolute;
+  bottom: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 5px;
+  color: var(--text-bright);
+  background: var(--bg-dark);
+  border: 1px solid var(--border-light);
+  padding: 2px 4px;
+  white-space: nowrap;
+  z-index: 50;
+  pointer-events: none;
+  display: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.pet-slot:hover .pet-slot-name {
+  display: block;
+}
+
+@keyframes pet-pulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(245, 200, 66, 0.3); }
+  50% { box-shadow: 0 0 16px rgba(245, 200, 66, 0.6); }
+}
+
+/* Active pet bonus display */
+.pet-bonus-display {
+  font-size: 7px;
+  color: var(--green-bright);
+  padding: 6px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ─── Pet Drop Notification ───────────────────────────── */
+
+.pet-drop-notification {
+  text-align: center;
+  padding: 14px;
+  margin-bottom: 10px;
+  background: rgba(245, 200, 66, 0.08);
+  border: 2px solid var(--gold);
+  animation: pet-drop-glow 1.5s ease-in-out infinite;
+}
+
+.pet-drop-title {
+  font-size: 12px;
+  color: var(--gold-bright);
+  text-shadow:
+    0 0 8px var(--gold),
+    0 0 16px var(--gold-dim);
+  margin-bottom: 10px;
+}
+
+.pet-drop-icon {
+  width: 48px;
+  height: 48px;
+  image-rendering: pixelated;
+  margin-bottom: 8px;
+}
+
+.pet-drop-name {
+  font-size: 10px;
+  color: var(--gold);
+}
+
+@keyframes pet-drop-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(245, 200, 66, 0.2); }
+  50% { box-shadow: 0 0 24px rgba(245, 200, 66, 0.5); }
+}
+
+/* ─── Tutorial Overlay ────────────────────────────────── */
+
+.tutorial-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 500;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: tutorial-fade-in 0.4s ease-out;
+}
+
+.tutorial-card {
+  background: var(--bg-panel);
+  border: 3px solid var(--gold-dim);
+  padding: 24px 20px;
+  max-width: 320px;
+  width: 100%;
+  text-align: center;
+  animation: tutorial-scale-in 0.4s ease-out;
+  box-shadow: 0 0 30px rgba(245, 200, 66, 0.15);
+}
+
+.tutorial-card h2 {
+  font-size: 11px;
+  color: var(--gold);
+  margin-bottom: 20px;
+  line-height: 1.6;
+  text-shadow: 0 0 6px rgba(245, 200, 66, 0.3);
+}
+
+.tutorial-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.tutorial-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  font-size: 8px;
+  color: var(--text);
+  padding: 8px 10px;
+  background: var(--bg-slot);
+  border: 1px solid var(--border);
+}
+
+.step-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+  width: 24px;
+  text-align: center;
+}
+
+.tutorial-hint {
+  font-size: 7px;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+  line-height: 1.8;
+}
+
+.tutorial-dismiss {
+  width: 100%;
+  font-family: "Press Start 2P", monospace;
+  font-size: 10px;
+  padding: 12px;
+  background: var(--gold);
+  color: var(--btn-active-text);
+  border: 2px solid var(--gold-bright);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.tutorial-dismiss:hover {
+  background: var(--gold-bright);
+}
+
+@keyframes tutorial-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes tutorial-scale-in {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ─── Info Modal ──────────────────────────────────────── */
+
+.info-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 500;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: tutorial-fade-in 0.3s ease-out;
+}
+
+.info-modal {
+  background: var(--bg-panel);
+  border: 3px solid var(--gold-dim);
+  padding: 24px 20px;
+  max-width: 340px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  animation: tutorial-scale-in 0.3s ease-out;
+  box-shadow: 0 0 30px rgba(245, 200, 66, 0.15);
+}
+
+.info-modal h2 {
+  font-size: 11px;
+  color: var(--gold);
+  text-align: center;
+  margin-bottom: 6px;
+  text-shadow: 0 0 6px rgba(245, 200, 66, 0.3);
+}
+
+.info-version {
+  font-size: 7px;
+  color: var(--text-dim);
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.info-section {
+  margin-bottom: 16px;
+}
+
+.info-section h3 {
+  font-size: 9px;
+  color: var(--text-bright);
+  margin-bottom: 8px;
+}
+
+.info-section p {
+  font-size: 7px;
+  color: var(--text);
+  line-height: 2;
+}
+
+.info-section ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 6px;
+}
+
+.info-section li {
+  font-size: 7px;
+  color: var(--text);
+  padding: 3px 0;
+  line-height: 1.8;
+}
+
+.info-section li::before {
+  content: "- ";
+  color: var(--gold-dim);
+}
+
+.info-brand {
+  font-size: 7px;
+  color: var(--text-dim);
+  text-align: center;
+  margin: 18px 0 16px;
+}
+
+.info-close {
+  width: 100%;
+  font-family: "Press Start 2P", monospace;
+  font-size: 9px;
+  padding: 10px;
+  background: var(--gold);
+  color: var(--btn-active-text);
+  border: 2px solid var(--gold-bright);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.info-close:hover {
+  background: var(--gold-bright);
+}
+
+/* ─── Use Potion Button (on inventory items) ──────────── */
+
+.inv-slot-use {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Press Start 2P", monospace;
+  font-size: 5px;
+  padding: 2px 6px;
+  min-height: 16px;
+  background: var(--btn-primary);
+  color: #b060e0;
+  border: 1px solid #703a90;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.inv-slot-use:hover {
+  background: var(--btn-primary-hover);
+  border-color: #b060e0;
+}
+
+.inv-slot-use:active {
+  background: #703a90;
+  color: var(--text-bright);
+}
+
+/* ─── TV Bezel Frame (Biniru Projects standard) ──────── */
+
+.tv-bezel-frame {
+  border: 6px solid var(--border-light);
+  border-radius: 20px;
+  box-shadow:
+    inset 0 0 20px rgba(0, 0, 0, 0.4),
+    0 0 15px var(--glow);
+  padding: 16px;
+  margin: 8px;
+  background: var(--bg-panel);
+}
+
+/* ─── Lore Book ──────────────────────────────────────── */
+
+.lore-title {
+  text-align: center;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+
+.lore-progress {
+  text-align: center;
+  font-size: 8px;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+.lore-era {
+  margin-bottom: 16px;
+}
+
+.lore-era-header {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--gold-dim);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 4px;
+  margin-bottom: 8px;
+}
+
+.lore-entry {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.lore-entry.unlocked {
+  background: linear-gradient(
+    135deg,
+    rgba(42, 74, 42, 0.3),
+    rgba(30, 50, 30, 0.5)
+  );
+  border: 1px solid var(--border);
+}
+
+.lore-entry.locked {
+  background: rgba(10, 26, 10, 0.5);
+  border: 1px dashed var(--border);
+  opacity: 0.6;
+}
+
+.lore-entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.lore-entry-title {
+  font-size: 9px;
+  color: var(--gold);
+  font-weight: bold;
+}
+
+.locked .lore-entry-title {
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.lore-entry-year {
+  font-size: 8px;
+  color: var(--gold-dim);
+}
+
+.lore-entry-text {
+  font-size: 8px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.lore-entry-hint {
+  font-size: 7px;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.lore-padding {
+  height: 300px;
+}
+
+.biniru-footnote {
+  text-align: center;
+  font-size: 7px;
+  color: var(--text-dim);
+  padding: 8px 0;
+  opacity: 0.6;
+}
+
+/* Lore notification badge on tab */
+.lore-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: var(--red-bright);
+  color: #fff;
+  font-size: 7px;
+  min-width: 14px;
+  height: 14px;
+  line-height: 14px;
+  text-align: center;
+  border-radius: 7px;
+  padding: 0 3px;
+}
+
+/* Make tab-btn relative for badge positioning */
+.tab-btn {
+  position: relative;
+}
+
+/* ─── Responsive — Larger Screens ──────────────────────── */
+
+/* ═══════════════════════════════════════════════════════════
+   Responsive Breakpoints
+   ═══════════════════════════════════════════════════════════ */
+
+/* Desktop / large screens — cap width and center */
+@media (min-width: 480px) {
+  body {
+    max-width: 480px;
+    margin: 0 auto;
+    border-left: 2px solid var(--border);
+    border-right: 2px solid var(--border);
+    box-shadow: 0 0 40px var(--glow);
+  }
+  /* Fix fixed tab-bar to stay within centered column */
+  #tab-bar {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 480px;
+  }
+}
+
+/* Small phones (320px–359px) — scale down density */
+@media (max-width: 359px) {
+  :root {
+    --fs-tiny:   4px;
+    --fs-xs:     5px;
+    --fs-sm:     6px;
+    --fs-md:     7px;
+    --fs-base:   8px;
+    --fs-lg:     9px;
+    --fs-xl:    10px;
+    --fs-tab:    6px;
+  }
+
+  /* Tighter padding on small screens */
+  #header { padding: 10px 12px; }
+  #skill-panel,
+  #inventory-panel,
+  #bank-storage-panel { padding: 10px 12px; }
+  .section-title { padding: 10px 12px 8px; }
+  #location-list { padding: 0 12px; }
+  .adv-active-panel { padding: 12px; }
+
+  /* Smaller inventory slots */
+  .inv-slot { min-height: 48px; }
+
+  /* Smaller bank slots */
+  .bank-slot { min-height: 38px; }
+  .bank-grid { gap: 2px; }
+
+  /* Tighter scene */
+  #scene { height: 130px; }
+  .bank-counter { width: 140px; height: 34px; }
+
+  /* Tab bar */
+  .tab-btn { padding: 7px 2px 9px; }
+  .tab-icon { width: 18px; height: 18px; }
+}
+
+/* Landscape mode on mobile (phone rotated) */
+@media (orientation: landscape) and (max-height: 500px) {
+  /* Collapse scene — no space for 160px tall scene in landscape */
+  #scene { height: 80px; }
+  .bank-counter { width: 120px; height: 28px; bottom: 20px; }
+  .character { margin-bottom: 22px; }
+  .bank-label { font-size: 6px; bottom: 4px; }
+
+  /* Tighten body padding for landscape tab bar */
+  body { padding-bottom: 56px; }
+
+  /* Smaller tab bar in landscape */
+  #tab-bar .tab-btn { padding: 5px 4px 7px; gap: 2px; }
+  .tab-icon { width: 16px; height: 16px; }
+  .tab-btn span:last-child { font-size: 6px; }
+
+  /* Reduce section padding */
+  #skill-panel,
+  #inventory-panel,
+  #bank-storage-panel { padding: 10px 14px; }
+  .section-title { padding: 10px 14px 8px; }
+  .adv-active-panel { padding: 10px; }
+
+  /* Smaller active boosts bar */
+  .active-boosts { padding: 4px 14px; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Save Export/Import Buttons
+   ═══════════════════════════════════════════════════════════ */
+
+.save-actions {
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  margin-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.btn-save {
+  flex: 1;
+  padding: 8px 4px;
+  font-family: "Press Start 2P", monospace;
+  font-size: 8px;
+  background: var(--btn-primary);
+  color: var(--text);
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+.btn-save:hover {
+  background: var(--btn-primary-hover);
+}
+.btn-save:active {
+  background: var(--border);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Mute Button
+   ═══════════════════════════════════════════════════════════ */
+
+.btn-mute {
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px 4px;
+  line-height: 1;
+  opacity: 0.8;
+}
+.btn-mute:hover { opacity: 1; }
+.btn-mute.muted { opacity: 0.4; }
+
+/* ═══════════════════════════════════════════════════════════
+   Achievement Cards
+   ═══════════════════════════════════════════════════════════ */
+
+.achievement-title {
+  margin-top: 16px;
+}
+
+.ach-tier-group {
+  margin-bottom: 12px;
+}
+
+.ach-tier-header {
+  font-family: "Press Start 2P", monospace;
+  font-size: 9px;
+  padding: 6px 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.ach-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  padding: 8px;
+  margin: 4px 8px 4px 8px;
+  border-radius: 4px;
+}
+.ach-card.completed {
+  opacity: 0.7;
+  border-color: var(--border-light);
+}
+
+.ach-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.ach-name {
+  font-family: "Press Start 2P", monospace;
+  font-size: 8px;
+  color: var(--text-bright);
+}
+
+.ach-check {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.ach-desc {
+  font-size: 7px;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+  line-height: 1.6;
+}
+
+.ach-reward {
+  font-size: 7px;
+  color: var(--gold-dim);
+  margin-top: 4px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Prestige Section
+   ═══════════════════════════════════════════════════════════ */
+
+.prestige-section {
+  background: var(--bg-panel);
+  border: 1px solid var(--gold-dim);
+  padding: 10px;
+  margin: 8px;
+  border-radius: 4px;
+}
+
+.prestige-current {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.prestige-stars {
+  color: var(--gold-bright);
+  font-size: 14px;
+}
+
+.prestige-label {
+  font-family: "Press Start 2P", monospace;
+  font-size: 8px;
+  color: var(--gold);
+}
+
+.prestige-lvl {
+  font-family: "Press Start 2P", monospace;
+  font-size: 7px;
+  color: var(--text-dim);
+  display: block;
+  margin-top: 4px;
+}
+
+.prestige-available {
+  text-align: center;
+}
+
+.prestige-info {
+  font-size: 7px;
+  color: var(--text);
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+.btn-prestige {
+  font-family: "Press Start 2P", monospace;
+  font-size: 9px;
+  padding: 8px 16px;
+  background: linear-gradient(180deg, var(--gold-dim), #806000);
+  color: var(--bg-dark);
+  border: 2px solid var(--gold);
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+.btn-prestige:hover {
+  background: var(--gold);
+}
+.btn-prestige:active {
+  transform: scale(0.97);
+}
+
+.prestige-row span:last-child {
+  color: var(--gold);
+}
