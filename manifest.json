@@ -11,6 +11,7 @@
   "dir": "ltr",
   "scope": "/",
   "categories": ["games"],
+  "keywords": ["idle rpg", "osrs", "runescape", "pixel art", "idle game", "rpg", "fantasy", "offline game"],
   "icons": [
     {
       "src": "assets/icon-192.png",
