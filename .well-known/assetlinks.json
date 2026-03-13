@@ -1,8 +1,0 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "io.github.biniruprojects.twa",
-        "sha256_cert_fingerprints": ["09:61:1F:92:0F:C4:AA:D6:8E:6C:1B:E3:81:EF:A3:A1:E0:DB:CC:E8:AD:EB:EC:8E:E3:BB:31:D9:61:61:4D:FF"]
-      }
-    }]
