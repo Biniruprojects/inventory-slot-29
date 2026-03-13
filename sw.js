@@ -5,7 +5,7 @@
  * Updates when a new SW version is deployed.
  */
 
-const CACHE_NAME = "is29-v6";
+const CACHE_NAME = "is29-v7";
 
 const ASSETS_TO_CACHE = [
   // ── Core ──
