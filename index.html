@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0a1a0a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Inventory Slot 29</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="assets/icon-192.svg" />
+  <link rel="stylesheet" href="css/game.css" />
+</head>
+<body>
+
+  <!-- ─── Header ──────────────────────────────────────── -->
+  <header id="header">
+    <span class="header-title"><img src="assets/logo_swords.svg" alt="" class="header-logo"> IS 29</span>
+    <span class="header-stats">
+      <span class="header-combat" id="combat-level">CB: 3</span>
+      <span class="header-gp" id="gp-display"><img src="assets/coin_gp.svg" alt="" class="gp-icon"> 0</span>
+      <button class="btn-mute" id="btn-mute" aria-label="Toggle sound">&#128266;</button>
+      <button class="btn-info" id="btn-info" aria-label="Game info">i</button>
+    </span>
+  </header>
+
+  <!-- ─── Active Potion Boosts Bar ────────────────────── -->
+  <div class="active-boosts" id="active-boosts" hidden></div>
+
+  <!-- ─── Tab Panels (only one visible at a time) ─────── -->
+
+  <!-- TAB: Bank ────────────────────────────────────────── -->
+  <div class="tab-panel active" id="tab-bank">
+
+    <section id="scene">
+      <div class="bank-counter"></div>
+      <div class="character" id="character">
+        <div class="char-head"></div>
+        <div class="char-body"></div>
+        <div class="char-legs"></div>
+      </div>
+      <div class="bank-label">Old Town Square &mdash; Bank</div>
+    </section>
+
+    <!-- Skill Selector (switches between 5 skills) -->
+    <section id="skill-selector"></section>
+
+    <!-- Original Alchemy Panel (shown when alchemy is active) -->
+    <section id="skill-panel">
+      <div class="skill-header">
+        <span class="skill-icon"><img src="assets/skill_alchemy.svg" alt="Alchemy"></span>
+        <span class="skill-name">ALCHEMY</span>
+        <span class="skill-level" id="alchemy-level">Lvl 1</span>
+      </div>
+      <div class="xp-bar-container">
+        <div class="xp-bar" id="xp-bar"></div>
+        <span class="xp-text" id="xp-text">0 / 83 XP</span>
+      </div>
+      <div class="recipe-selector">
+        <label class="recipe-label">Recipe:</label>
+        <select id="recipe-select"></select>
+      </div>
+      <div class="recipe-preview" id="recipe-preview"></div>
+      <div class="action-buttons">
+        <button class="btn-smelt" id="btn-smelt">SMELT</button>
+        <button class="btn-auto" id="btn-auto">AUTO</button>
+      </div>
+    </section>
+
+    <!-- Generic Skill Panel Body (shown for smithing/mining/fishing/cooking) -->
+    <section id="skill-panel-body" hidden></section>
+
+    <!-- Equipment Panel -->
+    <section id="equipment-panel">
+      <div class="equipment-header">
+        <span>EQUIPMENT</span>
+      </div>
+      <div class="equipment-slots" id="equipment-slots">
+        <div class="eq-slot" data-slot="weapon">
+          <div class="eq-slot-label">Weapon</div>
+          <div class="eq-slot-icon" id="eq-weapon-icon"></div>
+          <div class="eq-slot-name" id="eq-weapon-name">Empty</div>
+        </div>
+        <div class="eq-slot" data-slot="armor">
+          <div class="eq-slot-label">Armor</div>
+          <div class="eq-slot-icon" id="eq-armor-icon"></div>
+          <div class="eq-slot-name" id="eq-armor-name">Empty</div>
+        </div>
+        <div class="eq-slot" data-slot="shield">
+          <div class="eq-slot-label">Shield</div>
+          <div class="eq-slot-icon" id="eq-shield-icon"></div>
+          <div class="eq-slot-name" id="eq-shield-name">Empty</div>
+        </div>
+      </div>
+      <div class="equipment-bonuses" id="equipment-bonuses"></div>
+    </section>
+
+    <!-- Pets Panel -->
+    <section class="pets-panel" id="pets-panel">
+      <h3 class="section-title">Pets <span class="pet-count" id="pet-count">0/4</span></h3>
+      <div class="pet-grid" id="pet-grid"></div>
+    </section>
+
+    <section id="inventory-panel">
+      <div class="inventory-header">
+        <span>INVENTORY</span>
+        <span class="inventory-count" id="inv-count">0 / 28</span>
+      </div>
+      <div class="inventory-grid" id="inventory-grid"></div>
+    </section>
+
+    <!-- Bank Storage -->
+    <section id="bank-storage-panel">
+      <div class="bank-storage-header">
+        <span>BANK</span>
+        <span class="bank-count" id="bank-count">0 / 120</span>
+      </div>
+      <button class="btn-deposit-all" id="btn-deposit-all">DEPOSIT ALL</button>
+      <!-- Bank tab bar -->
+      <div class="bank-tab-bar" id="bank-tab-bar">
+        <button class="bank-tab-btn active" data-bank-tab="0">1</button>
+        <button class="bank-tab-btn" data-bank-tab="1">2</button>
+        <button class="bank-tab-btn" data-bank-tab="2">3</button>
+        <button class="bank-tab-btn" data-bank-tab="3">4</button>
+        <button class="bank-tab-btn" data-bank-tab="4">5</button>
+        <button class="bank-tab-btn" data-bank-tab="5">6</button>
+      </div>
+      <div class="bank-grid" id="bank-grid"></div>
+    </section>
+  </div>
+
+  <!-- TAB: Shop ─────────────────────────────────────────── -->
+  <div class="tab-panel" id="tab-shop">
+    <div class="shop-gp" id="shop-gp-display"></div>
+    <div class="shop-switcher" id="shop-switcher">
+      <button class="shop-switch-btn active" data-shop="general">🛒 General</button>
+      <button class="shop-switch-btn" data-shop="weapons">⚔ Weapons</button>
+      <button class="shop-switch-btn" data-shop="magic">✦ Magic</button>
+    </div>
+    <h3 class="section-title" id="shop-title">General Store</h3>
+    <div class="shop-stock" id="shop-stock"></div>
+    <h3 class="section-title shop-sell-title">Sell Items</h3>
+    <div class="shop-inventory" id="shop-inventory"></div>
+  </div>
+
+  <!-- TAB: Adventures ──────────────────────────────────── -->
+  <div class="tab-panel" id="tab-adventures">
+
+    <!-- Active adventure (shown when one is running) -->
+    <section class="adv-active-panel" id="adv-active" hidden>
+      <div class="adv-active-header">
+        <img id="adv-active-icon" src="" alt="" class="adv-loc-icon">
+        <div>
+          <div class="adv-active-name" id="adv-active-name"></div>
+          <div class="adv-active-style" id="adv-active-style"></div>
+        </div>
+      </div>
+      <div class="adv-timer-bar-container">
+        <div class="adv-timer-bar" id="adv-timer-bar"></div>
+        <span class="adv-timer-text" id="adv-timer-text"></span>
+      </div>
+      <button class="btn-collect" id="btn-collect" hidden>COLLECT LOOT</button>
+    </section>
+
+    <!-- Adventure result (shown after collecting) -->
+    <section class="adv-result-panel" id="adv-result" hidden>
+      <h3 class="adv-result-title" id="adv-result-title"></h3>
+      <div class="adv-result-body" id="adv-result-body"></div>
+      <button class="btn-dismiss" id="btn-dismiss-result">OK</button>
+    </section>
+
+    <!-- Adventure Log -->
+    <div class="adventure-log" id="adventure-log">
+      <h3 class="section-title">Adventure Log</h3>
+      <div class="log-entries" id="log-entries"></div>
+    </div>
+
+    <!-- Location selection (shown when no adventure active) -->
+    <section class="adv-locations" id="adv-locations">
+      <h3 class="section-title">Choose a Location</h3>
+      <div class="adv-style-selector">
+        <label class="recipe-label">Style:</label>
+        <select id="combat-style-select"></select>
+      </div>
+      <div id="location-list"></div>
+    </section>
+  </div>
+
+  <!-- TAB: Quests ──────────────────────────────────────── -->
+  <div class="tab-panel" id="tab-quests">
+    <h3 class="section-title">Quest Log</h3>
+    <div id="quest-list"></div>
+    <div id="quest-completed-list"></div>
+    <h3 class="section-title achievement-title">Achievements</h3>
+    <div id="achievement-list"></div>
+  </div>
+
+  <!-- TAB: Skills ──────────────────────────────────────── -->
+  <div class="tab-panel" id="tab-skills">
+    <h3 class="section-title">Skills</h3>
+    <div id="skills-grid"></div>
+    <div class="stats-block" id="stats-block"></div>
+    <div id="prestige-panel" hidden></div>
+    <div class="save-actions">
+      <button class="btn btn-save" id="btn-export-save">Export Save</button>
+      <button class="btn btn-save" id="btn-import-save">Import Save</button>
+      <input type="file" id="import-file-input" accept=".json" hidden>
+    </div>
+  </div>
+
+  <!-- TAB: Lore ───────────────────────────────────────── -->
+  <div class="tab-panel" id="tab-lore">
+    <div class="lore-book tv-bezel-frame">
+      <h3 class="section-title lore-title">Lore Book</h3>
+      <div class="lore-progress" id="lore-progress"></div>
+      <div class="lore-entries" id="lore-entries"></div>
+      <div class="lore-padding"></div>
+      <div class="biniru-footnote">Created by Biniru Projects</div>
+    </div>
+  </div>
+
+  <!-- ─── Item Tooltip (long-press / hover) ────────────── -->
+  <div class="item-tooltip" id="item-tooltip" hidden></div>
+
+  <!-- ─── Tutorial Overlay (first load) ──────────────── -->
+  <div class="tutorial-overlay" id="tutorial-overlay" hidden>
+    <div class="tutorial-card">
+      <h2>Welcome to Inventory Slot 29!</h2>
+      <div class="tutorial-steps">
+        <div class="tutorial-step"><span class="step-icon">&#9935;</span><span>Mine ores from rocks</span></div>
+        <div class="tutorial-step"><span class="step-icon">&#128293;</span><span>Smelt bars at the furnace</span></div>
+        <div class="tutorial-step"><span class="step-icon">&#128481;</span><span>Smith weapons &amp; armor</span></div>
+        <div class="tutorial-step"><span class="step-icon">&#9876;</span><span>Go on adventures!</span></div>
+      </div>
+      <p class="tutorial-hint">Train skills, complete quests, collect rare pets!</p>
+      <button class="btn btn-gold tutorial-dismiss" id="btn-tutorial-dismiss">Let's Go!</button>
+    </div>
+  </div>
+
+  <!-- ─── Info Modal ─────────────────────────────────── -->
+  <div class="info-modal-overlay" id="info-modal" hidden>
+    <div class="info-modal">
+      <h2>Inventory Slot 29</h2>
+      <p class="info-version">Beta v0.6</p>
+      <div class="info-section">
+        <h3>Zero In-Game Purchases</h3>
+        <p>This game will never have microtransactions. Everything is earnable through gameplay.</p>
+      </div>
+      <div class="info-section">
+        <h3>How We Stay Running</h3>
+        <p>Maximum 5 non-intrusive ads per day. 100% of revenue goes to:</p>
+        <ul>
+          <li>Server hosting &amp; maintenance</li>
+          <li>AI model training for bigger tools</li>
+          <li>Building free tools for everyone</li>
+        </ul>
+      </div>
+      <div class="info-section">
+        <h3>Full Transparency</h3>
+        <p>We believe you deserve to know exactly where your attention goes. No hidden fees, no pay-to-win, no loot boxes. Ever.</p>
+      </div>
+      <p class="info-brand">Made with care by Biniru Projects</p>
+      <button class="btn btn-gold info-close" id="btn-info-close">Close</button>
+    </div>
+  </div>
+
+  <!-- ─── Level Up Notification ───────────────────────── -->
+  <div class="level-up-notification" id="level-up" hidden>
+    <div class="level-up-text" id="level-up-text"></div>
+  </div>
+
+  <!-- ─── Bottom Tab Bar ──────────────────────────────── -->
+  <nav id="tab-bar">
+    <button class="tab-btn active" data-tab="tab-bank">
+      <img src="assets/tab_bank.svg" alt="" class="tab-icon">
+      <span>Bank</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-shop">
+      <img src="assets/tab_shop.svg" alt="" class="tab-icon">
+      <span>Shop</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-adventures">
+      <img src="assets/logo_swords.svg" alt="" class="tab-icon">
+      <span>Adventure</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-quests">
+      <img src="assets/quest_sword.svg" alt="" class="tab-icon">
+      <span>Quests</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-skills">
+      <img src="assets/skill_hitpoints.svg" alt="" class="tab-icon">
+      <span>Skills</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-lore">
+      <img src="assets/icon_info.svg" alt="" class="tab-icon">
+      <span>Lore</span>
+      <span class="lore-badge" id="lore-badge" hidden></span>
+    </button>
+  </nav>
+
+  <!-- ─── Footer (inside tab content, not fixed) ──────── -->
+  <footer id="footer">
+    <div class="disclaimer">A fan-made companion. Not affiliated with Jagex Ltd.</div>
+    <div class="footer-links">
+      <a href="privacy.html" target="_blank" class="footer-link">Privacy Policy</a>
+    </div>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
